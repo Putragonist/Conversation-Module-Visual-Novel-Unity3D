@@ -49,7 +49,7 @@ This useful if you have a translation which have different char count, which pro
 How to change from one text to another, you just need to change text in ```TypingEffect``` and the script will detect if text had been change. 
 
 But to make ```[char_limit={int}]```'s tag works you need to use method ```ChangeText(string text, out bool allTextCompleted)```  implemented in ```TypingEffect```.\
-Note:\
+Explanation:\
 ```string text``` Full text of text you want to change.\
 ```bool allTextCompleted``` Check if all divided season of text has shown and finished. If it has ```false``` value, the text will change to next season of text rather change it with new text. So, to access this method from your class, you need to use:
 
