@@ -10,5 +10,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8ffe5201c9fa2844b1ae0c6b0e4d2a2, type: 3}
-  m_Name: New Command
+  m_Name: New Commands_Template
   m_EditorClassIdentifier: 

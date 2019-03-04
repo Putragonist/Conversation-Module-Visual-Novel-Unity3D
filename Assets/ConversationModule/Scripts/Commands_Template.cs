@@ -12,11 +12,20 @@ namespace Conversation_Module
         /// </summary>
         public Dictionary<string, bool> command = new Dictionary<string, bool>();
 
-        public override Dictionary<string, bool> GetCommands()
+        public Commands_Template()
+        {
+            Initiate();
+        }
+
+        public override void Initiate()
         {
             command.Clear();
             command.Add(@"\[PauseAllText=(.*)\]", true);
             command.Add("[PauseAllText]", false);
+        }
+
+        public override Dictionary<string, bool> GetCommands()
+        {            
             return command;
         }
 
@@ -41,5 +50,7 @@ namespace Conversation_Module
                 Debug.Log("Command " + command + " is triggered");
             }
         }
+
+       
     }
 }

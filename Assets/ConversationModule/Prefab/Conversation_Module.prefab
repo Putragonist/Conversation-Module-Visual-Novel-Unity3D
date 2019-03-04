@@ -52,7 +52,7 @@ MonoBehaviour:
   clearNewText: 1
   m_textMeshPro: {fileID: 8592531736951217097}
   isTextFinished_UpdateSide: 0
-  additionCommand: {fileID: 11400000, guid: 7814e5b3e50c2454782711b4fbda6799, type: 2}
+  additionCommand: {fileID: 11400000, guid: 8e8aaf9ca6d17c34098cbe55e01ac8f8, type: 2}
   someVariable: 
 --- !u!1 &2635889218288493267
 GameObject:
