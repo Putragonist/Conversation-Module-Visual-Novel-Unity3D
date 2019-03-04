@@ -1,10 +1,10 @@
 # Conversation_Module
 Conversation Module
 
-This module created for easy use to create my visual novel. But it doesn't mean it can't be used in other projects.
+This module created for easy use in creating visual novel. But it doesn't mean it can't be used in other projects.
 It contain typing effect derivative from TextMeshPro, which add some tag to change variable of script.
 
- You can either clone the project or [download package](https://github.com/Putragonist/Conversation_Module/tree/master/Assets/ConversationModule/Package)
+ You can either clone the project or [download package](https://github.com/Putragonist/Conversation-Module-Visual-Novel-Unity3D/tree/master/Assets/ConversationModule/Package)
 
 Since I make this using Unity 2018.3.0f2, using the same unity version is recommended to avoid any error for compatibility (Which I didn't check).
 Please use NET version 4.x since some method using C# 7. To change it, go to ```edit->Project Setting->Player->Other Setting->Runtime Script Version```, and change to version 4.
@@ -15,49 +15,43 @@ Make sure input name in script ```MultipleText.cs``` exist in your ```input``` s
 
 # Tags #
 This module using Regex to make a tag which used to get value of tags in string, and applied it in variable you need.
-For adding more command, just edit ```Command``` method with tag you want. 
-
+For adding more command, just edit ```Command``` method with tag you want. \
 For this project, You can run this tag to change variable:
 
-```[conservant={string}]``` Example ```[conservant=Udin]``` to change name conservant.
+```[conservant={string}]``` : Example ```[conservant=Udin]``` : used for change name conservant.
 
-```[char_limit={int}]``` Example ```[char_limit=70]``` to limit char in string in one season, and put the rest to other season. 
-
-For example, if you have string which has 150 char length and you limit it 70, it will show the 70 at first season, 70 at second season, and 10 at third season.
+```[char_limit={int}]``` : Example ```[char_limit=70]``` : used for limiting char variable type's count in string in one page of conversation, and put the rest to other pages.\
+For example, if you have string which has 150 char length and you limit it 70, it will show the 70 at first page, 70 at second page, and 10 at third page.\
 This useful if you have a translation which have different char count, which probably the text box can't contain them all.
 
-```[reset_char_limit]``` Reset char limit to what initialized in inspector.
+```[reset_char_limit]``` : Used for Reset char variable type's count limit to what initialized in inspector.
 
-```[char_delay={int}]``` Example ```[char_delay=1000]``` To change delay speed per char of string for typing effect. Since it's delay, the more number, the more slower text will typing. It use millisecond (1s = 1000 ms).
+```[char_delay={int}]``` : Example ```[char_delay=1000]``` : Used for changing delay speed per 1 char of string in typing effect. Since it's delay, the more numbers are, the more slower text will typing. It use millisecond (1s = 1000 ms).
 
-```[PauseAllText={int}]``` Example ```[PauseAllText=5]``` Pause all active text with time (second) as parameter input. (Added 2019/2/27)
+```[PauseAllText={int}]``` : Example ```[PauseAllText=5]``` : Pause all active text with time (second) as parameter input. (Added 2019/2/27)
 
-```[PauseAllText]``` Pause all active text. (V1.1.0)
+```[PauseAllText]``` : Pause all active text. (V1.1.0)
 
-```[PauseText={int}]``` Example ```[PauseAllText=5]``` Pause text with time (second) as parameter input. (V1.1.0)
+```[PauseText={int}]``` : Example ```[PauseAllText=5]``` : Pause text with time (second) as parameter input. (V1.1.0)
 
-```[PauseText]``` Pause  text. (V1.1.0)
+```[PauseText]``` : Pause  text. (V1.1.0)
 
-```[reset_char_delay]``` Reset char delay speed to default (The one you fill in inspector)
+```[reset_char_delay]``` : Reset char delay speed to default (The one you fill in inspector)
 
-```[clear]``` Clear text that type before.
+```[clear]``` : Clear text that type before.
 
-```[alwaysClearText]``` After one season of text is done, it will clear the previous text. Use this when you want to change from NVL style to ADV style.
+```[alwaysClearText]``` : After one page of text is done, it will clear the previous text. Use this when you want to change from NVL style to ADV style.
 
-```[neverClearText]``` After one season of text is done, keep previous text. Use this when you want to change from ADV style to NVL
+```[neverClearText]``` : After one page of text is done, keep all previous text. Use this when you want to change from ADV style to NVL
 
 # How To #
 
-How to change from one text to another, you just need to change text in ```TypingEffect```. 
+How to change from one text to another, you just need to change text in ```TypingEffect``` and the script will detect if text had been change. 
 
-But to make ```[char_limit={int}]``` tag works you need to use method that implemented in ```TypingEffect```:
-
-You need to call ```ChangeText(string text, out bool allTextCompleted)```
-
-```string text``` Full text of text you want to change.
-
-```bool allTextCompleted``` Check if all divided season of text has shown and finished. If it has ```false``` value, the text will change to
-next season of text rather change it with new text. So, to access this method from your class, you need to use:
+But to make ```[char_limit={int}]```'s tag works you need to use method ```ChangeText(string text, out bool allTextCompleted)```  implemented in ```TypingEffect```.\
+Note:\
+```string text``` Full text of text you want to change.\
+```bool allTextCompleted``` Check if all divided season of text has shown and finished. If it has ```false``` value, the text will change to next season of text rather change it with new text. So, to access this method from your class, you need to use:
 
 ```
 public int[] texts; //In case you use multiple text.
