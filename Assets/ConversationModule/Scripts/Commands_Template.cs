@@ -2,41 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Command/Commands_Template")]
-public class Commands_Template : Commands
+namespace Conversation_Module
 {
-    /// <summary>
-    /// command as key, is retrieve value as value
-    /// </summary>
-    public Dictionary<string, bool> command = new Dictionary<string, bool>();
-
-    public override Dictionary<string, bool> GetCommands()
+    [CreateAssetMenu(menuName = "Command/Commands_Template")]
+    public class Commands_Template : Commands
     {
-        command.Clear();
-        command.Add(@"\[PauseAllText=(.*)\]", true);
-        command.Add("[PauseAllText]",false);
-        return command;
-    }
+        /// <summary>
+        /// command as key, is retrieve value as value
+        /// </summary>
+        public Dictionary<string, bool> command = new Dictionary<string, bool>();
 
-    public override void DoCommand(string command, string value)
-    {
-        if (command == @"\[PauseAllText=(.*)\]")
+        public override Dictionary<string, bool> GetCommands()
         {
-            float result = 0;
-            float.TryParse(value, out result);
-            TimeManager.PauseAll(result);
-            
-            Debug.Log("Command "+command+ " is triggered and Value is "+value);
+            command.Clear();
+            command.Add(@"\[PauseAllText=(.*)\]", true);
+            command.Add("[PauseAllText]", false);
+            return command;
         }
-    }
 
-    public override void DoCommand(string c)
-    {      
-
-        if(c == "[PauseAllText]")
+        public override void DoCommand(string command, string value)
         {
-            TimeManager.PauseAll();
-            Debug.Log("Command " + command + " is triggered");
+            if (command == @"\[PauseAllText=(.*)\]")
+            {
+                float result = 0;
+                float.TryParse(value, out result);
+                TimeManager.PauseAll(result);
+
+                Debug.Log("Command " + command + " is triggered and Value is " + value);
+            }
+        }
+
+        public override void DoCommand(string c)
+        {
+
+            if (c == "[PauseAllText]")
+            {
+                TimeManager.PauseAll();
+                Debug.Log("Command " + command + " is triggered");
+            }
         }
     }
 }
