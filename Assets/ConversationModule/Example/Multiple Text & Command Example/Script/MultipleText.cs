@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
+using Conversation_Module;
 
-namespace Conversation_Module
-{
     public class MultipleText : MonoBehaviour
     {
         [Tooltip("Text in textbox that this text want to show and process")]
@@ -95,4 +94,3 @@ namespace Conversation_Module
             }
         }
     }
-}

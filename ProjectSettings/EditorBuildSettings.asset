@@ -6,6 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/ConversationModule/Scenes/SampleScene.unity
+    path: Assets/ConversationModule/Example/Multiple Text & Command Example/Scenes/Multiple
+      Text & Command Example.unity
     guid: f7f00e31d3bae2e4599a931e02af6b04
   m_configObjects: {}

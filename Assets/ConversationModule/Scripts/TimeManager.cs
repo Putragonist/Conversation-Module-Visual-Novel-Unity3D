@@ -6,7 +6,6 @@ namespace Conversation_Module
 {
     public class TimeManager
     {
-
         public TimeManager()
         {
 

@@ -50,7 +50,7 @@ namespace Conversation_Module
         public bool clearNewText = true;
         private Thread th;
         private Queue qth = new Queue(); // q to process thread
-        private TMP_Text m_textMeshPro;
+        public TMP_Text m_textMeshPro;
         private TimeManager timeManager;
         public TimeManager TimeManagerTE
         {
@@ -94,7 +94,8 @@ namespace Conversation_Module
             timeManager = new TimeManager();
             init_perCharDelay = perCharDelay + 0;
             init_limitChar = limitChar + 0;
-            m_textMeshPro = GetComponent<TMP_Text>();
+            if(m_textMeshPro == null)
+                m_textMeshPro = GetComponent<TMP_Text>();
             UpdateText();
 
             th = new Thread(RunText);
