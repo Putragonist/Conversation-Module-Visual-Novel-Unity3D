@@ -203,7 +203,8 @@ namespace Conversation_Module
                             textLimited.Enqueue(tempText.ToString());
                         }
                     }
-                    text = textLimited.Dequeue();
+                    if(textLimited.Count>0)
+                        text = textLimited.Dequeue();
                 }
 
                 //split text for get the command
