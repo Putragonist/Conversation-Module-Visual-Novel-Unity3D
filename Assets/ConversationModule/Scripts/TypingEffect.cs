@@ -91,10 +91,12 @@ namespace Conversation_Module
 
         public void Initiate()
         {
+
+            m_textMeshPro.maxVisibleCharacters = 0;
             timeManager = new TimeManager();
             init_perCharDelay = perCharDelay + 0;
             init_limitChar = limitChar + 0;
-            if(m_textMeshPro == null)
+            if (m_textMeshPro == null)
                 m_textMeshPro = GetComponent<TMP_Text>();
             UpdateText();
 
@@ -104,11 +106,16 @@ namespace Conversation_Module
             initiated = true;
         }
 
+        bool timeReturnedError = false;
         // Update is called once per frame
         void Update()
         {
-            if (timeManager.IsPause || TimeManager.IsAllPause)
+            //Debug.Log("Time return error ="+timeReturnedError);
+            if ((timeManager != null && timeManager.IsPause) || TimeManager.IsAllPause)
+            {
+                timeReturnedError = true;
                 return;
+            }
 
             if (isTextChanged)
             {
@@ -134,7 +141,7 @@ namespace Conversation_Module
                 }
             }
 
-
+            Debug.Log("Total visible character = " + totalVisibleCharacters + " | Max Character = " + m_textMeshPro.maxVisibleCharacters);
             if ((totalVisibleCharacters != m_textMeshPro.maxVisibleCharacters))
             {
                 m_textMeshPro.maxVisibleCharacters = visibleCount;
@@ -142,6 +149,7 @@ namespace Conversation_Module
             }
             else if (isQDone)
             {
+                Debug.Log(isQDone);
                 isTextFinished_UpdateSide = true;
             }
         }
@@ -167,7 +175,11 @@ namespace Conversation_Module
                 if (limitChar > 0 && LengthTextWithoutCommand(text) + m_textMeshPro.maxVisibleCharacters
                     > limitChar && textLimited.Count == 0)
                 {
+                    Debug.Log(LengthTextWithoutCommand(text) + "+" + m_textMeshPro.maxVisibleCharacters + ">" + limitChar + "=" + (LengthTextWithoutCommand(text) + m_textMeshPro.maxVisibleCharacters
+                    > limitChar));
+                    Debug.Log("This thing is run rx234");
                     string[] split = Regex.Split(text, @"(?=\s)");
+                    Debug.Log("Split length = " + split.Length);
                     tempText.Clear();
                     tempText2.Clear();
                     tempText.Append(split[0]);
@@ -179,7 +191,7 @@ namespace Conversation_Module
 
                         longSentence = firstSentence ? LengthTextWithoutCommand(tempText2.ToString()) +
                             visibleCount : LengthTextWithoutCommand(tempText2.ToString());
-                      //  Debug.Log("Long Sentence = " + longSentence);
+                        Debug.Log("Long Sentence = " + longSentence);
                         if (longSentence > limitChar)
                         {
                             if (i < split.Length - 1)
@@ -197,22 +209,25 @@ namespace Conversation_Module
                         {
                             tempText.Append(split[i]);
                         }
-
+                        /*
                         if (i == split.Length - 1)
                         {
-                            textLimited.Enqueue(tempText.ToString());
-                        }
+                            
+                        }*/
                     }
-                    if(textLimited.Count>0)
-                        text = textLimited.Dequeue();
+                    //Enqueu last temp
+                    textLimited.Enqueue(tempText.ToString());
+                    text = textLimited.Dequeue();
                 }
 
                 //split text for get the command
                 foreach (string s in Regex.Split(text, @"(?=\[)|(?<=\])"))
                 {
-                    stringq.Enqueue(s);
+                    if (s != string.Empty)
+                        stringq.Enqueue(s);
                 }
-                text = stringq.Dequeue(); //deque it first to change the text
+
+                text = stringq.Count > 0 ? stringq.Dequeue() : text; //deque it first to change the text
                 isQDone = false; //since it add to que, that mean que is still not done
             }
             text = RunandClearCommand(text); // process regex
@@ -268,19 +283,20 @@ namespace Conversation_Module
             doCommand = !ignoreCommand;
 
             //---------------------------Run Aditional Command-------------------------------------
-            if(additionCommand != null)
+            if (additionCommand != null)
             {
-              //  Debug.Log("Command count = "+additionCommand.GetCommands().Count);
-                foreach (KeyValuePair<string,bool> valPair in additionCommand.GetCommands())
+                //  Debug.Log("Command count = "+additionCommand.GetCommands().Count);
+                foreach (KeyValuePair<string, bool> valPair in additionCommand.GetCommands())
                 {
                     //if (valPair.Key == string.Empty)
-                        //continue;
-                    if (valPair.Value) {
+                    //continue;
+                    if (valPair.Value)
+                    {
                         regVal = GetCommandValue(ref text, @valPair.Key, @"(?<=\=)(.*)(?=\])", out success);
-                        
+
                         if (success)
                         {
-                            if(doCommand)
+                            if (doCommand)
                                 additionCommand.DoCommand(valPair.Key, (string)regVal);
 
                             #region //Editing value inside
@@ -314,47 +330,49 @@ namespace Conversation_Module
                             #endregion
 
                         }
-                    } else if (text.Contains(valPair.Key))
-                    {                        
+                    }
+                    else if (text.Contains(valPair.Key))
+                    {
                         if (doCommand)
                             additionCommand.DoCommand(valPair.Key);
                         text = text.Replace(valPair.Key, string.Empty);
                         //Debug.Log("Command doesn't have any value");
                     }
                 }
-            } else
+            }
+            else
             {
                 //Debug.Log("No Addition Command");
             }
 
             //-----------------Change Conservant------------------------------------
-           // regVal = GetCommandValue(ref text, @"\[conservant=(.*)\]", @"(?>\=)(.*?)(?<\])", out bool success);
+            // regVal = GetCommandValue(ref text, @"\[conservant=(.*)\]", @"(?>\=)(.*?)(?<\])", out bool success);
             regVal = GetCommandValue(ref text, @"\[conservant=(.*)\]", @"(?<=\=)(.*)(?=\])", out success);
-         //   Debug.Log(success);
+            //   Debug.Log(success);
             if (success && doCommand)
             {
                 conservant = (string)regVal;
-               // Debug.Log("Conservant is = " + conservant);
+                // Debug.Log("Conservant is = " + conservant);
             }
 
             //-----------------Clear Conservant-------------------------------------------------
-            if(text.Contains("[clear_conservant]"))
+            if (text.Contains("[clear_conservant]"))
             {
-                if(doCommand)
+                if (doCommand)
                     conservant = string.Empty;
                 text = text.Replace("[clear_conservant]", string.Empty);
             }
 
-           // Debug.Log("Conservant is = " + conservant);
+            // Debug.Log("Conservant is = " + conservant);
             //---------------Change Text Limit--------------------------------------------
             regVal = GetCommandValue(ref text, @"\[char_limit=\d+\]", @"\d+");
-            if(doCommand)
+            if (doCommand)
                 limitChar = (regVal != null) ? int.Parse((string)regVal) : limitChar;
 
             //---------------Use initialized value of limitchar from inspector------------
             if (text.Contains("[reset_char_limit]"))
             {
-                if(doCommand)
+                if (doCommand)
                     limitChar = init_limitChar;
                 text = text.Replace("[reset_char_limit]", string.Empty);
             }
@@ -362,19 +380,19 @@ namespace Conversation_Module
             //---------------Change perCharDelay speed------------------------------------
 
             regVal = GetCommandValue(ref text, @"\[char_delay=\d+\]", @"\d+");
-            if(doCommand)
-                perCharDelay = (regVal != null) ? int.Parse ((string) regVal) : perCharDelay;
+            if (doCommand)
+                perCharDelay = (regVal != null) ? int.Parse((string)regVal) : perCharDelay;
 
             //---------------Pause text typing effect------------------------------------
-            regVal = GetCommandValue(ref text, @"\[PauseText=\d+\]", @"\d+",out success);
+            regVal = GetCommandValue(ref text, @"\[PauseText=\d+\]", @"\d+", out success);
 
-            Debug.Log("Pausing for " +(string) regVal + " or " + regVal + " second");
+            //Debug.Log("Pausing for " +(string) regVal + " or " + regVal + " second");
             if (doCommand && success)
             {
                 double result = 0;
-                double.TryParse((string) regVal, out result);
+                double.TryParse((string)regVal, out result);
                 timeManager.Pause((float)result);
-                Debug.Log("Pausing for "+result+" or "+ (string)regVal +" second");
+                Debug.Log("Pausing for " + result + " or " + (string)regVal + " second");
             }
 
             if (text.Contains("[PauseText]"))
@@ -391,14 +409,14 @@ namespace Conversation_Module
             if (text.Contains("[clear]"))
             {
                 //text = text.Replace("[clear]", string.Empty);
-                if(doCommand)
+                if (doCommand)
                     ClearText();
             }
             //----------------------------------------------------------------------------
             //------------------Change char delay time to init value----------------------
             if (text.Contains("[reset_char_delay]"))
             {
-                if(doCommand)
+                if (doCommand)
                     perCharDelay = init_perCharDelay;
                 text = text.Replace("[reset_char_delay]", string.Empty);
             }
@@ -407,7 +425,7 @@ namespace Conversation_Module
             //------------------Always Clear previous Text when text change---------------
             if (text.Contains("[alwaysClearText]"))
             {
-                if(doCommand)
+                if (doCommand)
                     clearNewText = true;
                 text = text.Replace("[alwaysClearText]", string.Empty);
             }
@@ -417,14 +435,14 @@ namespace Conversation_Module
 
             if (text.Contains("[neverClearText]"))
             {
-                if(doCommand)
+                if (doCommand)
                     clearNewText = false;
                 text = text.Replace("[neverClearText]", string.Empty);
             }
             //----------------------------------------------------------------------------- 
-            string[] tsplit = Regex.Split(text,"[clear]");
+            string[] tsplit = Regex.Split(text, "[clear]");
             int[] tcsplit = new int[tsplit.Length];
-            for(int i=0; i < tsplit.Length; i++)
+            for (int i = 0; i < tsplit.Length; i++)
             {
                 tcsplit[i] = tsplit[i].Length;
             }
@@ -445,9 +463,9 @@ namespace Conversation_Module
         /// <returns>value of regex</returns>
         protected System.Object GetCommandValue(ref string text, string tagWithRegex, string regexVal)
         {
-            return GetCommandValue(ref text, tagWithRegex, regexVal, out bool success);            
-        }       
-        
+            return GetCommandValue(ref text, tagWithRegex, regexVal, out bool success);
+        }
+
 
         /// <summary>
         /// Get the command and return it value
@@ -464,14 +482,14 @@ namespace Conversation_Module
             if (match.Success)
             {
                 string temp = match.Value;
-              //  Debug.Log("Command is"+match.Value);
+                //  Debug.Log("Command is"+match.Value);
                 match = Regex.Match(temp, @regexVal);
                 if (match.Success)
                 {
                     success = true;
                     Regex r = new Regex(@tagWithRegex);
                     text = r.Replace(text, string.Empty);
-                 //   Debug.Log("Value is " + match.Value);
+                    //   Debug.Log("Value is " + match.Value);
                     return match.Value;
                 }
                 else
@@ -495,6 +513,7 @@ namespace Conversation_Module
             visibleCount = 0;
             textInTextMeshProGUI = string.Empty;
             lastText = string.Empty;
+            m_textMeshPro.maxVisibleCharacters = 0;
         }
 
         /// <summary>
@@ -536,9 +555,10 @@ namespace Conversation_Module
         public void CompleteText()
         {
             isTextFinished_UpdateSide = false;
-            if(stringq.Count > 0)
+            if (stringq.Count > 0)
             {
-                while(stringq.Count > 0) { 
+                while (stringq.Count > 0)
+                {
                     text = stringq.Dequeue();
                     //Debug.Log("String after dequeue = " + text);
                     UpdateText();
@@ -576,14 +596,16 @@ namespace Conversation_Module
             //firstInitiated = start;
             //isQDone = firstInitiated ? true : isQDone;
             allTextCompleted = false;
-            if(textLimited.Count == 0)
+
+            if (textLimited.Count == 0)
             {
                 if (clearNewText)
                     ClearText();
                 allTextCompleted = true;
                 this.text = text;
                 isQDone = true;
-            } else
+            }
+            else
             {
                 ClearText();
                 this.text = textLimited.Dequeue();
@@ -595,13 +617,11 @@ namespace Conversation_Module
         /// </summary>
         public void ChangeNextText()
         {
-            if(textLimited.Count > 0)
+            if (textLimited.Count > 0)
             {
                 ClearText();
                 this.text = textLimited.Dequeue();
             }
-        }          
-
-        
+        }
     }
 }
