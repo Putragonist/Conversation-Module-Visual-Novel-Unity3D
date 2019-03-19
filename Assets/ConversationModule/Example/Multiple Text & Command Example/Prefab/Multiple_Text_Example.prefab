@@ -78,7 +78,7 @@ MonoBehaviour:
   textInBox: {fileID: 57975808759982902}
   nameBox: {fileID: 7057413862785945535}
   texts:
-  - '[conservant=Udin]Ayam [PauseText=5]goreng r[char_delay=500]asanya enak'
+  - '[conservant=Udin]Ayam goreng r[char_delay=500]asanya enak'
   - '[reset_char_delay]Tapi [PauseAllText=3]harganya mahal sekali.'
   - '[conservant=Anies]Dapatkah aku m[char_delay=1000]akan semuanya.'
   - '[reset_char_delay]Perutku tidak akan tahan.'
@@ -160,36 +160,6 @@ PrefabInstance:
     - target: {fileID: 124423714008162066, guid: 45a43d16445647c4a969acecea726a4a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1354025539781277983, guid: 45a43d16445647c4a969acecea726a4a,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8592531736951217097, guid: 45a43d16445647c4a969acecea726a4a,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8592531736951217097, guid: 45a43d16445647c4a969acecea726a4a,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8458583230538405873, guid: 45a43d16445647c4a969acecea726a4a,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4056653484053694206, guid: 45a43d16445647c4a969acecea726a4a,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4056653484053694206, guid: 45a43d16445647c4a969acecea726a4a,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

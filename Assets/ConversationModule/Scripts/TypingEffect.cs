@@ -141,7 +141,7 @@ namespace Conversation_Module
                 }
             }
 
-            Debug.Log("Total visible character = " + totalVisibleCharacters + " | Max Character = " + m_textMeshPro.maxVisibleCharacters);
+            //Debug.Log("Total visible character = " + totalVisibleCharacters + " | Max Character = " + m_textMeshPro.maxVisibleCharacters);
             if ((totalVisibleCharacters != m_textMeshPro.maxVisibleCharacters))
             {
                 m_textMeshPro.maxVisibleCharacters = visibleCount;
@@ -149,7 +149,7 @@ namespace Conversation_Module
             }
             else if (isQDone)
             {
-                Debug.Log(isQDone);
+                // Debug.Log(isQDone);
                 isTextFinished_UpdateSide = true;
             }
         }
@@ -288,6 +288,8 @@ namespace Conversation_Module
                 //  Debug.Log("Command count = "+additionCommand.GetCommands().Count);
                 foreach (KeyValuePair<string, bool> valPair in additionCommand.GetCommands())
                 {
+                    Debug.Log(text + "|| text.Contains(" + valPair.Key + ") = " + text.Contains(valPair.Key));
+                    // Debug.Break();
                     //if (valPair.Key == string.Empty)
                     //continue;
                     if (valPair.Value)
@@ -331,11 +333,18 @@ namespace Conversation_Module
 
                         }
                     }
-                    else if (text.Contains(valPair.Key))
+                    else
+                    //else
                     {
-                        if (doCommand)
+                        Debug.Log("Valpair Key =" + valPair.Key);
+                        //Debug.Break();
+                        if (text == valPair.Key && doCommand)
+                        {
                             additionCommand.DoCommand(valPair.Key);
-                        text = text.Replace(valPair.Key, string.Empty);
+                            //text = text.Replace(valPair.Key, string.Empty);
+                        }
+                        if (text.Contains(valPair.Key))
+                            text = text.Replace(valPair.Key, string.Empty);
                         //Debug.Log("Command doesn't have any value");
                     }
                 }
@@ -573,8 +582,14 @@ namespace Conversation_Module
         /// </summary>
         void RunText()
         {
+
             while (visibleCount < totalVisibleCharacters)
             {
+                if ((timeManager != null && timeManager.IsPause) || TimeManager.IsAllPause)
+                {
+                    timeReturnedError = true;
+                    continue;
+                }
                 lock (objLock)
                 {
                     visibleCount += 1;
@@ -623,5 +638,7 @@ namespace Conversation_Module
                 this.text = textLimited.Dequeue();
             }
         }
+
+
     }
 }
