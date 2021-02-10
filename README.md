@@ -86,4 +86,4 @@ For now, I use boolean in MultipleText script to check everything in TypingEffec
 
 I'm updating ```text count``` in new thread served by C#. Unity dev said that access and modifying between thread is expensive. So, it probably better if I use Unity Entity system or Job System which are unity served rather running my own thread. I'm still learning about unity job system, and for now, using clasic method still easier for me.
 
-Copyright @ [Putragonist](http://putragonist.com)
+Copyright @ Muhammad Ihsan Diputra
